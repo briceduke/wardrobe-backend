@@ -1,0 +1,49 @@
+import { Logger, NotFoundException } from '@nestjs/common';
+import { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
+
+import { AbstractDocument } from './abstract.schema';
+
+export abstract class AbstractRepository<TDocument extends AbstractDocument> {
+	protected abstract readonly logger: Logger;
+
+	constructor(protected readonly model: Model<TDocument>) {}
+
+	async create(doc: Omit<TDocument, "_id">): Promise<TDocument> {
+		const created = new this.model({
+			...doc,
+			_id: new Types.ObjectId(),
+		});
+
+		return (await (await created.save()).toJSON()) as unknown as TDocument;
+	}
+
+	async findOne(query: FilterQuery<TDocument>): Promise<TDocument> {
+		const doc = await this.model.findOne(query, {}, { lean: true });
+
+		if (!doc)
+			throw new NotFoundException("wtf are you looking for you neanderthal");
+
+		return doc;
+	}
+
+	async findOneAndUpdate(
+		query: FilterQuery<TDocument>,
+		update: UpdateQuery<TDocument>
+	): Promise<TDocument> {
+		const doc = await this.model.findOneAndUpdate(query, update, {
+			lean: true,
+			new: true,
+		});
+
+		if (!doc)
+			throw new NotFoundException(
+				"what even was that? what kinda crack are you smoking"
+			);
+
+		return doc;
+	}
+
+	async find(query: FilterQuery<TDocument>): Promise<TDocument[]> {
+		return this.model.find(query, {}, { lean: true });
+	}
+}
