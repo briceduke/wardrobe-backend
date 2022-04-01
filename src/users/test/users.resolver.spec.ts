@@ -44,7 +44,7 @@ describe("UsersResolver", () => {
 			});
 
 			test("then it should return a user", () => {
-				expect(user).toEqual(userStub());
+				expect(user).toEqual("hi");
 			});
 		});
 	});
