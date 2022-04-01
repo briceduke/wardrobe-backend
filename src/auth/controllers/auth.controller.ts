@@ -1,8 +1,38 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
+import { User } from 'src/users/models/user.model';
 
+import { CurrentUser } from '../decorators/current-user.decorator';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 
 @Controller("auth")
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
+
+	@UseGuards(LocalAuthGuard)
+	@Post("login")
+	async login(
+		@CurrentUser() user: User,
+		@Res({ passthrough: true }) res: Response
+	) {
+		await this.authService.login(user, res);
+
+		res.send(user);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get()
+	isAuthenticated() {
+		return true;
+	}
+
+	@Post("logout")
+	@UseGuards(JwtAuthGuard)
+	logout(@Res({ passthrough: true }) res: Response) {
+		this.authService.logout(res);
+
+		res.json({});
+	}
 }
