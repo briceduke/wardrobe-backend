@@ -27,7 +27,7 @@ export class UsersService {
 		};
 	}
 
-	async createUser(data: CreateUserInput) {
+	async createUser(data: CreateUserInput): Promise<User> {
 		await this.validateData(data);
 
 		const userDoc = await this.usersRepo.create({
@@ -38,13 +38,13 @@ export class UsersService {
 		return this.toModel(userDoc);
 	}
 
-	async getUser(args: GetUserArgs) {
+	async getUser(args: GetUserArgs): Promise<User> {
 		const userDoc = await this.usersRepo.findOne(args);
 
 		return this.toModel(userDoc);
 	}
 
-	async validateUser(email: string, password: string) {
+	async validateUser(email: string, password: string): Promise<User> {
 		const userDoc = await this.usersRepo.findOne({ email });
 
 		const validPassword = await bcrypt.compare(password, userDoc.password);
