@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ClothesModule } from './clothes/clothes.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -25,6 +26,7 @@ import * as Joi from 'joi';
 		DatabaseModule,
 		UsersModule,
 		AuthModule,
+		ClothesModule,
 	],
 	controllers: [],
 	providers: [],
