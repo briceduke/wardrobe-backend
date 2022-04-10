@@ -7,6 +7,11 @@ export class UpdateClothesInput {
 	@Field()
 	@IsNotEmpty()
 	@IsString()
+	_id: string;
+
+	@Field()
+	@IsNotEmpty()
+	@IsString()
 	name: string;
 
 	@Field(() => GraphQLUpload)
