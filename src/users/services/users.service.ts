@@ -11,15 +11,6 @@ import { UsersRepository } from '../repositories/users.repository';
 export class UsersService {
 	constructor(private readonly usersRepo: UsersRepository) {}
 
-	private async validateData(data: CreateUserInput) {
-		try {
-			await this.usersRepo.findOne({ email: data.email });
-			throw new UnprocessableEntityException(
-				"you already have an account silly"
-			);
-		} catch (err) {}
-	}
-
 	private toModel(userDoc: UserDocument): User {
 		return {
 			_id: userDoc._id.toHexString(),
@@ -28,7 +19,12 @@ export class UsersService {
 	}
 
 	async createUser(data: CreateUserInput): Promise<User> {
-		await this.validateData(data);
+		const user = await this.usersRepo.findOne({ email: data.email });
+
+		if (user)
+			throw new UnprocessableEntityException(
+				"you already have an account silly"
+			);
 
 		const userDoc = await this.usersRepo.create({
 			...data,

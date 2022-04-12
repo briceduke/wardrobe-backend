@@ -18,9 +18,6 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
 	async findOne(query: FilterQuery<TDocument>): Promise<TDocument> {
 		const doc = await this.model.findOne(query, {}, { lean: true });
 
-		if (!doc)
-			throw new NotFoundException("wtf are you looking for you neanderthal");
-
 		return doc;
 	}
 
