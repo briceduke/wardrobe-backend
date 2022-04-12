@@ -6,8 +6,11 @@ export class InviteDocument extends AbstractDocument {
 	@Prop()
 	inviteCode: string;
 
-	@Prop()
+	@Prop({ default: '' })
 	userId: string;
+
+	@Prop()
+	ownerId: string;
 }
 
 export const InviteSchema = SchemaFactory.createForClass(InviteDocument);

@@ -9,4 +9,7 @@ export class Invite extends AbstractModel {
 
 	@Field()
 	readonly userId: string;
+
+	@Field()
+	readonly ownerId: string;
 }
