@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { GetUserArgs } from '../dto/args/get-user.dto';
@@ -14,15 +14,15 @@ export class UsersService {
 	private toModel(userDoc: UserDocument): User {
 		return {
 			_id: userDoc._id.toHexString(),
-			email: userDoc.email,
+			username: userDoc.username,
 		};
 	}
 
 	async createUser(data: CreateUserInput): Promise<User> {
-		const user = await this.usersRepo.findOne({ email: data.email });
+		const user = await this.usersRepo.findOne({ username: data.username });
 
 		if (user)
-			throw new UnprocessableEntityException(
+			throw new BadRequestException(
 				"you already have an account silly"
 			);
 
@@ -40,8 +40,8 @@ export class UsersService {
 		return this.toModel(userDoc);
 	}
 
-	async validateUser(email: string, password: string): Promise<User> {
-		const userDoc = await this.usersRepo.findOne({ email });
+	async validateUser(username: string, password: string): Promise<User> {
+		const userDoc = await this.usersRepo.findOne({ username });
 
 		const validPassword = await bcrypt.compare(password, userDoc.password);
 
