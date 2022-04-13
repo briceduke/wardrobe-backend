@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
 
@@ -17,7 +17,7 @@ export class UsersService {
 			_id: userDoc._id.toHexString(),
 			username: userDoc.username,
 			referralCode: userDoc.referralCode,
-			referralUses: userDoc.referralUses
+			referralUses: userDoc.referralUses,
 		};
 	}
 
@@ -25,14 +25,15 @@ export class UsersService {
 		const user = await this.usersRepo.findOne({ username: data.username });
 
 		if (user)
-			throw new BadRequestException(
-				"you already have an account silly"
-			);
+			throw new BadRequestException("you already have an account silly");
 
-		const referredBy = await this.usersRepo.findOne({ referralCode: data.referralCode });
+		const referredBy = await this.usersRepo.findOne({
+			referralCode: data.referralCode,
+		});
 
-		if (!referredBy || referredBy.referralUses === 0) throw new BadRequestException('invalid referral code!');
-		
+		if (!referredBy || referredBy.referralUses === 0)
+			throw new BadRequestException("invalid referral code!");
+
 		referredBy.referralUses--;
 
 		await this.usersRepo.findOneAndUpdate({ _id: referredBy._id }, referredBy);
