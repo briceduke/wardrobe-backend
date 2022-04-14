@@ -6,7 +6,7 @@ import { OutfitsRepository } from "../repositories/outfits.repository";
 import { UseOutfitInput } from "../dto/input/use-outfit.input";
 
 @Injectable()
-export class UsersService {
+export class OutfitsService {
     constructor(private readonly outfitsRepo: OutfitsRepository) {}
 
     private toModel(outfitDoc: OutfitDocument): Outfit {

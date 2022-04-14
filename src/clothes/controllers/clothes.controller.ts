@@ -40,7 +40,7 @@ export class ClothesController {
 	}
 
 	@UseGuards(JwtAuthGuard)
-	@Get()
+	@Get('all')
 	async getClothes(@CurrentUser() user: User) {
 		return this.clothesService.getClothes(user._id);
 	}
