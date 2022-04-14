@@ -16,7 +16,7 @@ export class OutfitDocument extends AbstractDocument {
     clothesIds: string[];
 
     @Prop()
-    lastWord: Date;
+    lastWorn: Date;
 }
 
 export const OutfitSchema = SchemaFactory.createForClass(OutfitDocument);

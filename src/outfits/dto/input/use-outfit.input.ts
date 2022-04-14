@@ -5,6 +5,11 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsString, Max, MaxLength, Min, MinLeng
 export class UseOutfitInput {
 	@Field()
 	@IsNotEmpty()
+	@IsString()
+	readonly _id: string;
+	
+	@Field()
+	@IsNotEmpty()
 	@IsBoolean()
 	readonly didWear: boolean;
 
